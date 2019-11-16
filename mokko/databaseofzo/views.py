@@ -34,6 +34,32 @@ def dingen(request):
         response["lidmaatschapsproduct"] = model_to_dict(
             Lidmaatschapsproducten.objects.order_by("?").first()
         )
+    if "afspraken" not in json_body:
+         afspraken = list(Afspraken.objects.all())
+         afspraken = [None] + [model_to_dict(x) for x in afspraken]
+         choice = random.choice(afspraken)
+         if choice is not None:
+            response["afspraken"] = choice
+    if "businessproces" not in json_body:
+        response["businessproces"] = model_to_dict(
+            Businessprocessen.objects.order_by("?").first()
+        )
+    if "kanaalspecificatiecode" not in json_body:
+        response["kanaalspecificatiecode"] = model_to_dict(
+            Kanaalspecificatiecodes.objects.order_by("?").first()
+        )
+    if "productovereenkomst" not in json_body:
+        response["productovereenkomst"] = model_to_dict(
+            Productovereenkomsten.objects.order_by("?").first()
+        )    
+    if "betaaltermijn" not in json_body:
+        response["betaaltermijn"] = model_to_dict(
+            Betaaltermijnen.objects.order_by("?").first()
+        )    
+    if "gender" not in json_body:
+        response["gender"] = model_to_dict(
+            Geslachten.objects.order_by("?").first()
+        )                  
     if "optioneleproduct" not in json_body:
         producten = list(OptioneleProducten.objects.all())
         producten = [model_to_dict(x) for x in producten]

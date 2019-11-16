@@ -18,12 +18,27 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from .models import Lidmaatschapsproducten
 from .views import dingen
-from .serializers import LidmaatschapsproductenViewSet, OptioneleProductenViewSet
+from .serializers import (
+    LidmaatschapsproductenViewSet,
+    OptioneleProductenViewSet,
+    AfsprakenViewSet,
+    KanaalspecificatiecodesViewSet,
+    BetaaltermijnenViewSet,
+    BusinessprocessenViewSet,
+    GeslachtenViewSet,
+    ProductovereenkomstenViewSet,
+)
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'lidmaatschapsproducten', LidmaatschapsproductenViewSet)
 router.register(r'optioneleproducten', OptioneleProductenViewSet)
+router.register(r'afspraken', AfsprakenViewSet)
+router.register(r'kanaalspecificatiecodes', KanaalspecificatiecodesViewSet)
+router.register(r'betaaltermijnen', BetaaltermijnenViewSet)
+router.register(r'businessprocessen', BusinessprocessenViewSet)
+router.register(r'geslachten', GeslachtenViewSet)
+router.register(r'productovereenkomsten', ProductovereenkomstenViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
