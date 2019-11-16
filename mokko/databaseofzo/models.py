@@ -9,7 +9,7 @@ class Lidmaatschapsproducten(models.Model):
     dekking = models.CharField(max_length=200)
 
 class OptioneleProducten(models.Model):
-    productcode = models.ArrayField()
+    productcode = models.CharField(max_length=2)
 
 class Geslachten(models.Model):
     geslacht = models.CharField(max_length=10)
