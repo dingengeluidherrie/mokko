@@ -29,6 +29,7 @@ def dingen(request):
     json_body = json.loads(request.body)
     response = json_body
 
+    # TODO: extract a method to check the json_body keys as local variables. Cleaner code :)
     if "lidmaatschapsproduct" not in json_body:
         response["lidmaatschapsproduct"] = model_to_dict_remove_id(
             Lidmaatschapsproducten.objects.order_by("?").first()
@@ -47,6 +48,8 @@ def dingen(request):
         response["kanaalspecificatiecode"] = model_to_dict_remove_id(
             Kanaalspecificatiecodes.objects.order_by("?").first()
         )
+        # TODO: if both birthdate and productovereenkomst are proviced, use given data.
+        # (they are interdependent, but if the user wants conflicting data they can have it >:D )
     if "productovereenkomst" not in json_body:
         response["productovereenkomst"] = model_to_dict_remove_id(
             Productovereenkomsten.objects.order_by("?").first()
@@ -59,6 +62,7 @@ def dingen(request):
         response["gender"] = model_to_dict_remove_id(
             Geslachten.objects.order_by("?").first()
         )                  
+        # TODO: Make optioneleproduct dependent of lidmaatschapsproduct
     if "optioneleproduct" not in json_body:
         producten = list(OptioneleProducten.objects.all())
         producten = [model_to_dict_remove_id(x) for x in producten]
