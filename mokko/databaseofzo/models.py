@@ -2,6 +2,8 @@ from django.db import models
 
 # Create your models here.
 
+
+# TODO: wire these motherlovers up to the user and group models provided by django
 class Lidmaatschapsproducten(models.Model):
     productnaam = models.CharField(max_length=200)
     productcode = models.CharField(max_length=200)
