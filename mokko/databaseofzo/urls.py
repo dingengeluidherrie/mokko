@@ -17,7 +17,7 @@ from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
 from .models import Lidmaatschapsproducten
-from .views import dingen
+from .views import generate_element, generate_users_product
 from .serializers import (
     LidmaatschapsproductenViewSet,
     OptioneleProductenViewSet,
@@ -44,5 +44,6 @@ router.register(r'productovereenkomsten', ProductovereenkomstenViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     url(r'^', include(router.urls)),
-    path('dingen/', dingen),
+    path('dingen/', generate_element),
+    path('cartesian/', generate_users_product),
 ]

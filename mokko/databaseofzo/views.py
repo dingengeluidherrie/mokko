@@ -16,7 +16,7 @@ from .models import (
 from .utils import combs, model_to_dict_remove_id
 from faker import Faker
 import random
-from itertools import combinations
+from itertools import combinations, product
 import json
 
 # Create your views here.
@@ -24,10 +24,14 @@ fake = Faker("nl_NL")
 
 
 @csrf_exempt
-def dingen(request):
+def generate_element(request, dict_values=None):
 
-    json_body = json.loads(request.body)
-    response = json_body
+    if request is not None:
+        json_body = json.loads(request.body)
+        response = json_body
+    else:
+        json_body = dict_values
+        response = dict_values
 
     # TODO: extract a method to check the json_body keys as local variables. Cleaner code :)
     if "lidmaatschapsproduct" not in json_body:
@@ -100,8 +104,8 @@ def dingen(request):
         response["telefoonnummer"] = "0" + str(fake.random_int(min=111111111, max=999999999))
     if "email" not in json_body:
         response["email"] = fake.free_email()
-    if json_body["betaaltermijn"]["termijn"] == "MAAND":
-            json_body["automatischeIncasso"] = True
+    # if json_body["betaaltermijn"]["termijn"] == "MAAND":
+    #         json_body["automatischeIncasso"] = True
     if "automatischeIncasso" not in json_body:
         response["automatischeIncasso"] = fake.boolean()
     if "iban" not in json_body:
@@ -109,4 +113,63 @@ def dingen(request):
     if "nieuwsbrief" not in json_body:
         response["nieuwsbrief"] = fake.boolean()
 
-    return JsonResponse(response)
+    if request is not None:
+        return JsonResponse(response)
+    return response
+
+@csrf_exempt
+def generate_users_product(
+    request,
+    lidmaatschapsproducten=None,
+    optionele_producten=None,
+    productovereenkomsten=None,
+    betaaltermijnen=None,
+    aantal=None,
+):
+
+    json_body = json.loads(request.body)
+    if 'lidmaatschapsproducten' in json_body:
+        lidmaatschapsproducten = [model_to_dict_remove_id(x) for x in list(Lidmaatschapsproducten.objects.all())]
+    else:
+        lidmaatschapsproducten = [None]
+        
+    if 'optionele_producten' in json_body:
+        optionele_producten = [model_to_dict_remove_id(x) for x in list(OptioneleProducten.objects.all())]
+    else:
+        optionele_producten = [None]
+
+    if 'productovereenkomsten' in json_body:
+        productovereenkomsten = [model_to_dict_remove_id(x) for x in list(Productovereenkomsten.objects.all())]
+    else:
+        productovereenkomsten = [None]
+
+    if 'betaaltermijnen' in json_body:
+        betaaltermijnen = [model_to_dict_remove_id(x) for x in list(Betaaltermijnen.objects.all())]
+    else:
+        betaaltermijnen = [None]
+
+    anwb_product = list(
+        product(
+            lidmaatschapsproducten,
+            optionele_producten,
+            productovereenkomsten,
+            betaaltermijnen,
+        )
+    )
+    result = [
+        generate_element(None, 
+            dict_values={
+            'lidmaatschap': x[0],
+            'optionele_producten': x[1],
+            'productOvereenkomst': x[2],
+            'betaaltermijn': x[3]
+            }
+        )
+        for x in anwb_product
+    ]
+
+    print(result)
+    if aantal in json_body and aantal < len(result):
+        result = random.sample(result, json_body['aantal'])
+    return JsonResponse(result, safe=False)
+ 
