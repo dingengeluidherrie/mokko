@@ -5,5 +5,6 @@ from django.db import models
 class PonchoComponents(models.Model):
     componentname = models.CharField(max_length=200)
 
-# class OptioneleProducten(models.Model):
-#     productcode = models.CharField(max_length=2)
+class PonchoProps(models.Model):
+    propname = models.CharField(max_length=100)
+    proptype = models.CharField(max_length=200)
